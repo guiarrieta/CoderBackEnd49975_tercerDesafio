@@ -43,9 +43,11 @@ const entorno = async () => {
             let resultado = productos;
 
             if (req.query.limit) {
+                if (isNaN(req.query.limit)) {
+                    return res.status(400).send('ERROR. El limite de elementos debe ser numerico')
+                }
                 resultado = resultado.slice(0, req.query.limit)
             }
-            const prettyJSON = JSON.stringify(resultado, null, 2);    
 
             res.setHeader('Content-type', 'application/json')
             res.status(200).json(resultado)
@@ -61,7 +63,7 @@ const entorno = async () => {
 
             // verifico si no pasaron un valor numerico
             if (isNaN(id)) {
-                return res.send('ERROR. Se debe ingresar un id numerico')
+                return res.status(400).send('ERROR. Se debe ingresar un id numerico')
 
             }
             idEncontrado = productos.find((producto) => {
@@ -69,7 +71,7 @@ const entorno = async () => {
             })
 
             if (!idEncontrado) {
-                return res.send('Error, No existe el id')
+                return res.status(404).send('Error, No existe el id')
 
             }
 
